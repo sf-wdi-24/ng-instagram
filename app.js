@@ -1,9 +1,5 @@
 var app = angular.module('instagramSearchApp', ['ngRoute']);
 
-app.run(function() {
-  Parse.initialize('9KdsHrz9QEEdM5Gz5GAuuHtdrjExO11sOvwMRnp5', 'UiPpuXT7RbjuY2wWLJt6jqOblBgGhDZNIOZrkvmL');
-});
-
 app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {
@@ -35,30 +31,10 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
   };
 
   $scope.savePhoto = function (photo) {
-    var Photo = Parse.Object.extend("Photo");
-    var newPhoto = new Photo({
-      url: photo.images.standard_resolution.url,
-      user: photo.user.username,
-      likes: photo.likes.count
-    });
-    newPhoto.save()
-      .then(function (data) {
-        console.log(data);
-      });
+    console.log(photo);
   };
 }]);
 
 app.controller('FavoritesCtrl', ['$scope', function ($scope) {
-  $scope.favorites = [];
-  var Photo = Parse.Object.extend("Photo");
-  var query = new Parse.Query(Photo);
-  query.find({
-    success: function (results) {
-      for (var i = 0; i < results.length; i++) {
-        var object = results[i];
-        $scope.favorites.push(object.get('url'));
-      }
-      console.log($scope.favorites);
-    }
-  });
+  $scope.favoritesCtrlTest = 'FavoritesCtrl is working!';
 }]);

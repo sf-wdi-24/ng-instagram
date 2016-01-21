@@ -35,7 +35,7 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
   };
 
   $scope.savePhoto = function (photo) {
-    var Photo = Parse.Object.extend("Photo");
+    var Photo = Parse.Object.extend('Photo');
     var newPhoto = new Photo({
       url: photo.images.standard_resolution.url,
       user: photo.user.username,
@@ -50,7 +50,7 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
 
 app.controller('FavoritesCtrl', ['$scope', function ($scope) {
   $scope.favorites = [];
-  var Photo = Parse.Object.extend("Photo");
+  var Photo = Parse.Object.extend('Photo');
   var query = new Parse.Query(Photo);
   query.find({
     success: function (results) {

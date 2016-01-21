@@ -1,0 +1,18 @@
+{
+  "name": "ng-instagram",
+  "version": "0.0.0",
+  "description": "**Objective:** Use Angular to create an Instagram search engine.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "hbs": "^4.0.0",
+    "mongoose": "^4.3.6"
+  }
+}

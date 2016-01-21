@@ -1,7 +1,7 @@
 <h3>favorite photos</h3>
 <hr>
-<div class="row" ng-if="photos.length > 0">
-  <div class="col-md-3 col-sm-4" ng-repeat="photo in photos">
+<div class="row" ng-if="favorites.length > 0">
+  <div class="col-md-3 col-sm-4" ng-repeat="photo in favorites">
     <div class="thumbnail">
       <img ng-src="{{photo.url}}">
       <br>

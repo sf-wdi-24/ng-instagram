@@ -37,7 +37,6 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
 
   $scope.savePhoto = function (photo) {
     var Photo = Parse.Object.extend('Photo');
-
     var newPhoto = new Photo({
       url: photo.images.standard_resolution.url,
       user: photo.user.username,
@@ -57,17 +56,34 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
   };
 }]);
 
-app.controller('FavoritesCtrl', ['$scope', function ($scope) {
-  $scope.favorites = [];
-  var Photo = Parse.Object.extend('Photo');
-  var query = new Parse.Query(Photo);
-  query.find({
-    success: function (results) {
-      for (var i = 0; i < results.length; i++) {
-        var object = results[i];
-        $scope.favorites.push(object.get('url'));
-      }
-      console.log($scope.favorites);
-    }
-  });
+app.controller('FavoritesCtrl', ['$scope', '$q', function ($scope, $q) {
+	var PhotoDfd = $q.defer();
+	var Photo = Parse.Object.extend('Photo');
+	var query = new Parse.Query(Photo);
+	$scope.favorites = [];
+
+	query.find()
+		.then(function (data) {
+			// success callback
+			PhotoDfd.resolve(data);
+		}, function (error) {
+			// error callback
+			PhotoDfd.reject(data);
+		});
+
+	PhotoDfd.promise
+		.then(function (data) {
+			// success callback
+			var favoritePhotos = data;
+			$scope.favorites = favoritePhotos.map(function (photo) {
+				return {
+					url: photo.get('url'),
+					user: photo.get('user'),
+					likes: photo.get('likes')
+				};
+			});
+		})
+		.catch(function (error) {
+			// error callback
+		});
 }]);

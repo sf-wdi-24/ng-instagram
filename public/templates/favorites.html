@@ -1,2 +1,17 @@
-<h1>Welcome to the Favorites Page!</h1>
-<h2>{{favoritesCtrlTest}}</h2>
+<h3>favorite photos</h3>
+<hr>
+<div class="row" ng-if="favorites.length > 0">
+  <div class="col-md-3 col-sm-4" ng-repeat="photo in favorites">
+    <div class="thumbnail">
+      <img ng-src="{{photo.url}}">
+      <br>
+      <p>
+        <span class="glyphicon" ng-class="{'glyphicon-heart': photo.likes > 0, 'glyphicon-heart-empty': photo.likes === 0}"></span>
+        <ng-pluralize count="{{photo.likes}}" when="{'1': '1 like', 'other': '{} likes'}"></ng-pluralize>
+        <span class="pull-right">
+          @{{photo.user}}
+        </span>
+      </p>
+    </div>
+  </div>
+</div>

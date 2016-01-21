@@ -6,7 +6,7 @@
   <input type="submit" value="search" class="btn btn-primary">
 </form>
 <hr>
-<div class="row" ng-show="photos.length > 0">
+<div class="row" ng-if="photos.length > 0">
   <div class="col-md-3 col-sm-4" ng-repeat="photo in photos">
     <div class="thumbnail">
       <img ng-src="{{photo.images.standard_resolution.url}}">

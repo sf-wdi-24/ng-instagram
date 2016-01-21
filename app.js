@@ -36,14 +36,22 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
 
   $scope.savePhoto = function (photo) {
     var Photo = Parse.Object.extend('Photo');
+
     var newPhoto = new Photo({
       url: photo.images.standard_resolution.url,
       user: photo.user.username,
       likes: photo.likes.count
     });
+
+    // save without error-handling:
+    // newPhoto.save()
+
+    // save with error-handling:
     newPhoto.save()
       .then(function (data) {
-        console.log(data);
+        // success callback
+      }, function (error) {
+      	// error callback
       });
   };
 }]);

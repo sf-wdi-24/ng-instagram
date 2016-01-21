@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="instangular">
+<html lang="en" ng-app="instagramSearchApp">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
 
   <!-- bootstrap css -->
   <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
-  <title>Instangular</title>
-
   <!-- angular -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.4/angular.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.min.js"></script>
 
-  <!-- ngRoute -->
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.js"></script>
-
-  <!-- custom script -->
+  <!-- custom script (angular app) -->
   <script type="text/javascript" src="app.js"></script>
+
+  <title>ngAngular</title>
 </head>
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-md-12" ng-view></div>
+      <div class="col-md-12">
+        <!-- ng-view goes here -->
+      </div>
     </div>
   </div>
 </body>

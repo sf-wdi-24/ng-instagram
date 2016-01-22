@@ -26,10 +26,10 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 
 app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.searchCtrlTest = 'search controller is working';
-  $scope.searchTag = function (){
+
+  $scope.searchTag = function () {
     var tag = $scope.hashtag; 
     var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?client_id=d8d0d6b44249490bbde6eee4d1968dac&callback=JSON_CALLBACK';
-
     $http.jsonp(url)
       .then(function (response) {
         $scope.hashtag = "";
@@ -40,7 +40,9 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
       });
   };
  
-
+  $scope.savePhoto = function (photo) {
+    console.log(photo);
+  };
 }]);
 
 app.controller('FavoritesCtrl', ['$scope', function ($scope) {

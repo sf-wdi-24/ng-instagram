@@ -4,7 +4,7 @@
 
 **You should be pair programming the entire time you work on this lab. That means you're using ONE computer at a time, and ONLY the "driver" is allowed to type (you'll switch roles throughout the lab).**
 
-## Set Up
+## Setup
 
 1. Whoever is going to be the "driver" first should fork this repo, and clone it into their `develop` folder on their local machine. The "navigator" must close their computer.
 

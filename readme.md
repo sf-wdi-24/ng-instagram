@@ -47,7 +47,7 @@
    * app.js
    */
 
-   app.controller('SearchCtrl', ['$scope', '$http', function ($scope) {
+   app.controller('SearchCtrl', ['$scope', function ($scope) {
      // add a test attribute to `$scope` here
    }]);
 

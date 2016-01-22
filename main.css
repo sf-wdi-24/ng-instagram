@@ -1,0 +1,17 @@
+a {
+	color: #fa5c5c;
+}
+a:focus, a:hover {
+	color: #df0707;
+	text-decoration: none;
+}
+.btn-cta {
+	background-color: #fa5c5c;
+	border: 1px solid #df0707;
+	color: white;
+}
+.btn-cta:focus, .btn-cta:hover {
+	background-color: #df0707;
+	border: 1px solid #df0707;
+	color: white;
+}

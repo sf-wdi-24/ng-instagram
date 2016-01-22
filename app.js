@@ -53,11 +53,8 @@ app.controller('SearchCtrl', ['$scope', '$http', 'Photo', function ($scope, $htt
     
     $http.jsonp(url)
       .then(function (response) {
-        // success callback
         $scope.tag = '';
         $scope.photos = response.data.data;
-      }, function (error) {
-        // error callback
       });
   };
 
@@ -71,22 +68,23 @@ app.controller('SearchCtrl', ['$scope', '$http', 'Photo', function ($scope, $htt
     };
 
     Photo.save(photoData, function (data) {
-      // success callback (optional)
+      // success callback
     }, function (error) {
-      // error callback (optional)
+      // error callback
     });
+
+    // or without callbacks:
+    // Photo.save(photoData);
   };
 }]);
 
 app.controller('FavoritesCtrl', ['$scope', 'Photo', function ($scope, Photo) {
   $scope.favorites = [];
 
-  Photo.query().$promise
-    .then(function (data) {
-      // success callback
-      $scope.favorites = data.results;
-    })
-    .catch(function (error) {
-      // error callback
-    });
+  Photo.query(function (data) {
+    // success callback
+    $scope.favorites = data.results;
+  }, function (error) {
+    // error callback
+  });
 }]);

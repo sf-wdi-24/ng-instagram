@@ -3,7 +3,7 @@
   <div class="form-group">
     <input type="text" ng-model="tag" class="form-control" placeholder="type any tag name" autofocus>
   </div>
-  <input type="submit" value="search" class="btn btn-primary">
+  <input type="submit" value="search" class="btn btn-cta">
 </form>
 <hr>
 <div class="row" ng-if="photos.length > 0">
@@ -20,7 +20,7 @@
       </p>
       <p>
         <a href="javascript:void(0)" ng-click="savePhoto(photo)"> 
-          <span class="glyphicon glyphicon-star-empty"></span>  
+          <span class="glyphicon" ng-class="{'glyphicon-star': photo.favorited, 'glyphicon-star-empty': !photo.favorited}"></span>  
           add to favorites
         </a>
       </p>

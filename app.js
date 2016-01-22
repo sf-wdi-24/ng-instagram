@@ -36,6 +36,8 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
   };
 
   $scope.savePhoto = function (photo) {
+    photo.favorited = true;
+
     var Photo = Parse.Object.extend('Photo');
     var newPhoto = new Photo({
       url: photo.images.standard_resolution.url,

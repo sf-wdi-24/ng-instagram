@@ -64,7 +64,7 @@
 
 1. At this point, the "driver" should add, commit, and push their changes to GitHub. The "driver" should also add the "navigator" as a collaborator on their forked version of the repo. It's time to switch drivers! The new driver should clone their partners forked version of the repo into their `develop` folder. The new navigator must close their computer.
 
-2. Since you're going to be implementing an Instagram search engine, you need an API key from Instagram. Go to <a href="https://www.instagram.com/developer">instagram.com/developer</a> and log in with your Instagram account (or create an account if you don't already have one).
+2. Since you're going to be implementing an Instagram search engine, you need an API key from Instagram. Go to <a href="https://www.instagram.com/developer" target="_blank">instagram.com/developer</a> and log in with your Instagram account (or create an account if you don't already have one).
 
 3. On the Instagram developer dashboard, click "Manage Clients" on the nav, then "Register a New Client" (green button near the top). Fill out the information; not all the fields are required, so it's ok to give minimal information (if the "Website URL" is required, it should let you use `http://localhost:3000`).
 
@@ -469,3 +469,8 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 
   In `favorites.html`, `ng-repeat` over `favorites` to display the favorite photos in the view.
 
+## Solutions
+
+* <a href="https://github.com/sf-wdi-24/ng-instagram/tree/solution" target="_blank">Base Solution</a> (Instagram Search)
+* <a href="https://github.com/sf-wdi-24/ng-instagram/tree/solution_parse" target="_blank">Favorites with Parse</a>
+* <a href="https://github.com/sf-wdi-24/ng-instagram/tree/solution_mean" target="_blank">Favorites with MEAN Stack</a>

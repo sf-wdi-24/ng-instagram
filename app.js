@@ -32,6 +32,7 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
   };
 
   $scope.savePhoto = function (photo) {
+    photo.favorited = true;
     console.log(photo);
   };
 }]);

@@ -80,6 +80,10 @@
 from the form, set up the following `$http` request to the Instagram API (remember to include `$http` in the controller's list of dependencies):
 
   ```js
+  /*
+   * app.js
+   */
+
   var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?client_id=YOUR_INSTAGRAM_CLIENT_ID&callback=JSON_CALLBACK';
 
   $http.jsonp(url)
@@ -112,7 +116,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 
 4. It would be nice if you could save the "favorited" photos somewhere, so the next step is to set up your app to use Parse! First, **checkout a new branch called `parse`**.
 
-5. Add the Parse CDN to `index.html`. You'll also be using `ngResource` to interact with Parse, so add that CDN as well. Your JavaScript CDNs should be in this order:
+5. Add the Parse CDN to `index.html`. You'll also be using `ngResource` to interact with Parse, so add that CDN as well. Your JavaScript CDNs should be in this order:```
 
   ```html
   <!-- index.html -->
@@ -142,6 +146,10 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 7. In your Angular app, set Request Headers for Parse to send your API keys with every request. This should be a global variable outside any existing config or controllers.
 
   ```js
+  /*
+   * app.js
+   */
+
   var parseRequestHeaders = {
     'X-Parse-Application-Id': 'YOUR_PARSE_APPLICATION_ID',
     'X-Parse-REST-API-Key': 'YOUR_PARSE_REST_API_KEY'
@@ -155,6 +163,10 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 9. Define the `Photo` resource:
 
   ```js
+  /*
+   * app.js
+   */
+
   app.factory('Photo', ['$resource', function ($resource) {
     return $resource('https://api.parse.com/1/classes/Photo/:photoId', { photoId: '@photoId' },
       {
@@ -174,9 +186,13 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   * Calling the `Photo.query` method will send a `GET` request to `https://api.parse.com/1/classes/Photo` (to get all the photos in the collection).
   * Calling the `Photo.save` method will send a `POST` request to `https://api.parse.com/1/classes/Photo` (to add a new photo to the collection).
 
-10. In the `SearchCtrl`, implement your `savePhoto` function so that it calls the `Photo.save` method:
+10. Add `Photo` to `SearchCtrl`'s list of dependencies. In the `SearchCtrl`, implement your `savePhoto` function so that it calls the `Photo.save` method:
 
   ```js
+  /*
+   * app.js
+   */
+
   $scope.savePhoto = function (photo) {
     var photoData = {
       url: photo.images.standard_resolution.url,
@@ -196,3 +212,260 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   ```
 
 11. Now when the user clicks the "favorite" link on any photo, the photo should save to your `Photo` collection in parse. Check your Parse dashboard to see if it's working!
+
+12. Add `Photo` to `FavoritesCtrl`'s list of dependencies. To get the favorite photos to display, call the `Photo.query` method in the `FavoritesCtrl`:
+
+  ```js
+  /*
+   * app.js
+   */
+
+  app.controller('FavoritesCtrl', ['$scope', 'Photo', function ($scope, Photo) {
+    $scope.favorites = [];
+
+    Photo.query(function (data) {
+      // success callback
+      $scope.favorites = data.results;
+    }, function (error) {
+      // error callback
+    });
+  }]);
+  ```
+
+  In `favorites.html`, `ng-repeat` over `favorites` to display the favorite photos in the view.
+
+## Favorites with MEAN Stack
+
+1. The current driver should add, commit, and push their changes to GitHub. The new driver should pull down the changes from GitHub. **From the `master` branch, create a new branch called `mean`.**
+
+2. As an alternative to Parse, you're going to implement the same "favoriting" functionality for photos, but this time by building your own server with Mongo, Express, and Node. From your app's root directory, create a new file `server.js`. Run `npm init` in the Terminal.
+
+3. Install your Node modules:
+
+  ```zsh
+  ➜  npm install --save express body-parser hbs mongoose
+  ```
+
+  Now would be a good time to create a `.gitignore` file and ignore your `node_modules`.
+
+4. Set up your Express boilerplate in `server.js`:
+
+  ```js
+  /*
+   * server.js
+   */
+
+   // require express and other modules
+   var express = require('express'),
+       app = express(),
+       bodyParser = require('body-parser'),
+       mongoose = require('mongoose');
+
+   // configure bodyParser (for receiving form data)
+   app.use(bodyParser.urlencoded({ extended: true }));
+   app.use(bodyParser.json());
+
+   // serve static files from public folder
+   app.use(express.static(__dirname + '/public'));
+
+   // set view engine to hbs (handlebars)
+   app.set('view engine', 'hbs');
+
+   // connect to mongodb
+   mongoose.connect('mongodb://localhost/ng_instagram');
+
+   // listen on port 3000
+   app.listen(3000, function() {
+     console.log('server started');
+   });
+  ```
+
+5. You'll need to reorganize your file structure a bit:
+
+  ```zsh
+  ➜  mkdir views
+  ➜  mv index.html views/index.hbs
+  ➜  mkdir public
+  ➜  mkdir public/scripts
+  ➜  mv app.js public/scripts/app.js
+  ➜  mv templates public/templates
+  ```
+
+6. Open up `index.hbs` and change the path to require `app.js`:
+
+  ```html
+  <!-- index.hbs -->
+
+  <head>
+    ...
+
+    <!-- custom script (angular app) -->
+    <script type="text/javascript" src="scripts/app.js"></script>
+  </head>
+  ```
+
+7. In `server.js`, you'll need a "catch all" route to render `index.hbs` for every server request:
+ 
+  ```js
+  /*
+   * server.js
+   */
+
+  /*
+   * Load `views/index.hbs` file
+   * when any route is requested from the server
+   */
+
+  app.get('*', function (req, res) {
+    res.render('index');
+  });
+  ```
+
+8. At this point, you should fire up your server with `nodemon` (you'll also want to have `mongod` running in another tab) and check that it doesn't crash. Also open up `localhost:3000` in the browser and make sure your Angular app is still working. You should be able to search photos from Instagram, click the "favorite" link on a photo and see a `console.log`, and navigate to the "Favorites" view.
+
+9. Once everything is connected, your next goal is to set up API routes for photos. You'll want a route to save a new photo to the database and a route to get all the photos from the database. First, make a models folder and a `Photo` model:
+
+  ```zsh
+  ➜  mkdir models
+  ➜  touch models/photo.js
+  ```
+
+10. Inside `photo.js`, set up your Mongoose model:
+
+  ```
+  /*
+   * photo.js
+   */
+
+  var mongoose = require('mongoose'),
+      Schema = mongoose.Schema;
+
+  var PhotoSchema = new Schema({
+    url: String,
+    user: String,
+    likes: Number
+  });
+
+  var Photo = mongoose.model('Photo', PhotoSchema);
+  module.exports = Photo;
+  ```
+
+11. Require your `Photo` model in `server.js`:
+
+  ```js
+  /*
+   * server.js
+   */
+
+  // require Photo model
+  var Photo = require('./models/photo');
+  ```
+
+12. Set up API routes for getting all photos and saving a new photo to the database (fill in the blanks):
+
+  ```js
+  /*
+   * server.js
+   */
+
+  // get all photos
+  app.get('/api/photos', function (req, res) {
+    // find all photos in db
+  });
+
+  // create new photo
+  app.post('/api/photos', function (req, res) {
+    // create new photo with form data (`req.body`)
+
+    // save new photo in db
+  });
+  ```
+
+  Once you have your API routes set up, test them on Postman before continuing.
+
+13. Switching to the client-side, you're going to make a similar `Photo` resource to the one you set up with Parse, but this time, the API endpoints will be on your own server. First, make sure to include the `ngResource` CDN in `index.hbs`, and add `ngResource` to your Angular app's dependencies in `app.js`.
+
+14. Define the `Photo` resource:
+
+  ```js
+  /*
+   * app.js
+   */
+
+  app.factory('Photo', ['$resource', function ($resource) {
+    return $resource('/api/photos/:id', { id: '@_id' });
+  }]);
+  ```
+
+  * Since there is no need to set Request Headers when sending requests to your own server, the `Photo` resource is much simpler this time, taking advantage of the pre-baked defaults.
+  * Calling the `Photo.query` method will send a `GET` request to `localhost:3000/api/photos` (to get all the photos from the database).
+  * Calling the `Photo.save` method will send a `POST` request to `localhost:3000/api/photos` (to add a new photo to the database).
+
+15. Add `Photo` to `SearchCtrl`'s list of dependencies. In the `SearchCtrl`, implement your `savePhoto` function so that it calls the `Photo.save` method:
+
+  ```js
+  /*
+   * app.js
+   */
+
+  $scope.savePhoto = function (photo) {
+    var photoData = {
+      url: photo.images.standard_resolution.url,
+      user: photo.user.username,
+      likes: photo.likes.count
+    };
+
+    Photo.save(photoData, function (data) {
+      // success callback
+    }, function (error) {
+      // error callback
+    });
+
+    // or without callbacks:
+    // Photo.save(photoData);
+
+    // or using $http:
+    // $http.post('/api/photos', photoData)
+    //   .then(function (response) {
+    //     // success callback
+    //   }, function (error) {
+    //     // error callback
+    //   });
+  };
+  ```
+
+16. Now when the user clicks the "favorite" link on any photo, the photo should save to your `photos` collection in your Mongo database. You can check your `mongo` CLI in the Terminal to see if it's working.
+
+17. Add `Photo` to `FavoritesCtrl`'s list of dependencies. To get the favorite photos to display, call the `Photo.query` method in the `FavoritesCtrl`:
+
+  ```js
+  /*
+   * app.js
+   */
+
+  app.controller('FavoritesCtrl', ['$scope', '$http', 'Photo', function ($scope, '$http', Photo) {
+    $scope.favorites = [];
+
+    Photo.query(function (data) {
+      // success callback
+      $scope.favorites = data;
+    }, function (data) {
+      // error callback
+    });
+
+    // or without callbacks:
+    // $scope.favorites = Photo.query();
+
+    // or using $http:
+    // $http.get('/api/photos')
+    //   .then(function (response) {
+    //     // success callback
+    //     $scope.favorites = response.data;
+    //   }, function (error) {
+    //     // error callback
+    //   });
+  }]);
+  ```
+
+  In `favorites.html`, `ng-repeat` over `favorites` to display the favorite photos in the view.
+

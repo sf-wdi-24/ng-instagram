@@ -26,17 +26,23 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
     
     $http.jsonp(url)
       .then(function (response) {
+        // success callback
         $scope.tag = '';
         $scope.photos = response.data.data;
+      }, function (error) {
+        // error callback
       });
   };
 
   $scope.savePhoto = function (photo) {
+    photo.favorited = true;
+
     var photoData = {
       url: photo.images.standard_resolution.url,
       user: photo.user.username,
       likes: photo.likes.count
     };
+
     $http.post('/api/photos', photoData)
       .then(function (response) {
         // success callback

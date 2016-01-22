@@ -1,2 +1,27 @@
+<div align="center">
 <h1>Welcome to the Search Page!</h1>
-<h2>{{searchCtrlTest}}</h2>
+<hr>
+<form ng-submit="searchTag()">
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="hashtag" placeholder="Search">
+    </div>
+    <input type="submit" class="btn btn-primary btn-block">
+  </form>
+	<div class="container">
+		<div class="row">
+			<div ng-repeat="photo in photos" class="col-md-3 thumbnail">
+
+				<img ng-src="{{photo.images.standard_resolution.url}}" class="img-responsive" alt="photo">
+				<p>{{photo.user.username}}</p>
+				<ng-pluralize count="photo.likes.count"
+                 when="{'0': 'No Likes',
+                     'one': '1 Like',
+                     'other': '{} Likes'}">
+				</ng-pluralize>
+			</div>
+		</div>
+	</div>
+
+  
+
+</div>

@@ -1,5 +1,4 @@
-<h1>Welcome to the Search Page!</h1>
-<h2>{{searchCtrlTest}}</h2>
+<h1 class="text-center">Instagram search</h1>
 <div class="row">
 	<div class="col-md-6 col-md-offset-3">
 		<form ng-submit="searchTag()">
@@ -18,9 +17,15 @@
 		<p>{{photo.user.username}}</p>
 		<img ng-src={{photo.images.standard_resolution.url}}>
 		<p>
+		<span>
 			<ng-pluralize count="photo.likes.count" 
 				when="{'0': 'No likes', 'one': '{} like', 'other': '{} likes'}">
 			</ng-pluralize>
+		</span>
+		<span>
+			<a href="#" ng-click="savePhoto(photo)">Like</a>
+		</span>
+
 		</p>
 	</div>
 </div>

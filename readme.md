@@ -64,7 +64,7 @@
 
 1. At this point, the "driver" should add, commit, and push their changes to GitHub. The "driver" should also add the "navigator" as a collaborator on their forked version of the repo. It's time to switch drivers! The new driver should clone their partner's forked version of the repo into their `develop` folder. The new navigator must close their computer.
 
-2. Since you're going to be implementing an Instagram search engine, you need an API key from Instagram. Go to <a href="https://www.instagram.com/developer" target="_blank">instagram.com/developer</a> and log in with your Instagram account (or create an account if you don't already have one).
+2. Since you're going to be implementing an Instagram search engine, you need an API key from Instagram. Go to <a href="https://www.instagram.com/developer" target="_blank">instagram.com/developer</a>, and log in with your Instagram account (or create an account if you don't already have one).
 
 3. On the Instagram developer dashboard, click "Manage Clients" on the nav, then "Register a New Client" (green button near the top). Fill out the information; not all the fields are required, so it's ok to give minimal information (if the "Website URL" is required, it should let you use `http://localhost:3000`).
 
@@ -87,7 +87,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.searchTag = function () {
       var tag = $scope.tag;
-      var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?client_id=d8d0d6b44249490bbde6eee4d1968dac&callback=JSON_CALLBACK';
+      var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?client_id=YOUR_INSTAGRAM_CLIENT_ID&callback=JSON_CALLBACK';
 
       $http.jsonp(url)
         .then(function (response) {
@@ -101,11 +101,14 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 
   Note that you have to use `JSONP` to call the Instagram API from the client-side to bypass rules about Cross-Origin Requests.
 
-8. Inside the success callback, you should clear the value from the form (using `$scope` and the value of `ng-model`).
+8. Inside the success callback, you should clear the value of the form input field (using `$scope` and the value of `ng-model`).
 
-9. Add a new attribute to `$scope`, `$scope.photos`, which should equal the array of photos that comes back from the Instagram API. You'll need to look at the API response in the Chrome developer console to inspect the structure of the `response` object from Instagram.
+9. Also inside the success callback, add a new attribute to `$scope`, `$scope.photos`, which should equal the array of photos that comes back from the Instagram API. You'll need to look at the API response in the Chrome developer console to inspect the structure of the `response` object from Instagram.
 
-10. When you've got `$scope.photos` working, `ng-repeat` over the photos in the "Search". You should display at least the image URL, the username of the user who posted the photo, and the number of "likes" the photo got. The photo objects that come back from Instagram have attributes nested several levels deep, so spend some time inspecting the structure of the data.
+10. Once you have `$scope.photos` working, `ng-repeat` over the photos in the "Search" view. You should display at least:
+  * the image URL.
+  * the username of the user who posted the photo.
+  * the number of "likes" the photo got.
 
 11. Use the `ng-pluralize` directive to display the number of "likes" for each photo (e.g. "1 like", "2 likes").
 
@@ -243,7 +246,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 
 1. The current driver should add, commit, and push their changes to GitHub. The new driver should pull down the changes from GitHub. **From the `master` branch, create a new branch called `mean`.**
 
-2. As an alternative to Parse, you're going to implement the same "favoriting" functionality for photos, but this time by building your own server with Mongo, Express, and Node. From your app's root directory, create a new file `server.js`. Run `npm init` in the Terminal.
+2. As an alternative to Parse, you're going to implement the same "favoriting" functionality for photos, but this time by building your own server with Mongo, Express, and Node. From your app's root directory, create a new file `server.js`, and run `npm init` in the Terminal.
 
 3. Install your Node modules:
 
@@ -296,7 +299,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   ➜  mv templates public/templates
   ```
 
-6. Open up `index.hbs` and change the path to require `app.js`:
+6. Open up `index.hbs`, and change the path to require `app.js` (since it's nested under `scripts` now):
 
   ```html
   <!-- index.hbs -->
@@ -326,7 +329,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   });
   ```
 
-8. At this point, you should fire up your server with `nodemon` (you'll also want to have `mongod` running in another tab) and check that it doesn't crash. Also open up `localhost:3000` in the browser and make sure your Angular app is still working. You should be able to search photos from Instagram, click the "favorite" link on a photo and see a `console.log`, and navigate to the "Favorites" view.
+8. At this point, you should fire up your server with `nodemon` (you'll also want to have `mongod` running in another tab), and check that it doesn't crash. Also open up `localhost:3000` in the browser, and make sure your Angular app is still working. You should be able to search photos from Instagram, click the "favorite" link on a photo and see a `console.log`, and navigate to the "Favorites" view.
 
 9. Once everything is connected, your next goal is to set up API routes for photos. You'll want a route to save a new photo to the database and a route to get all the photos from the database. First, make a models folder and a `Photo` model:
 
@@ -474,10 +477,12 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 
 18. In `favorites.html`, `ng-repeat` over `favorites` to display the favorite photos in the view.
 
+### Congrats, you've now created two fully functional Angular applications with different back-ends!!!
+
 ![giphy](https://cloud.githubusercontent.com/assets/7833470/12503593/6d245dac-c08a-11e5-9850-8427cc639d32.gif)
 
 ## Solutions
 
-* <a href="https://github.com/sf-wdi-24/ng-instagram/tree/solution" target="_blank">Base Solution</a> (Instagram Search)
-* <a href="https://github.com/sf-wdi-24/ng-instagram/tree/solution_parse" target="_blank">Favorites with Parse</a>
-* <a href="https://github.com/sf-wdi-24/ng-instagram/tree/solution_mean" target="_blank">Favorites with MEAN Stack</a>
+* [Base Solution](https://github.com/sf-wdi-24/ng-instagram/tree/solution) (Instagram Search)
+* [Favorites with Parse](https://github.com/sf-wdi-24/ng-instagram/tree/solution_parse)
+* [Favorites with MEAN Stack](https://github.com/sf-wdi-24/ng-instagram/tree/solution_mean)

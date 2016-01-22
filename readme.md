@@ -137,4 +137,62 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   </head>
   ```
 
-6. If you haven't signed up for Parse yet, go ahead and sign up and create a new app.
+6. If you haven't signed up for Parse yet, go ahead and sign up and create a new app. When signing up, select the "Data" product and the "Web" environment. Then create your app and go to the app dashboard. This is where you'll see all your data.
+
+7. In your Angular app, set Request Headers for Parse to send your API keys with every request. This should be a global variable outside any existing config or controllers.
+
+  ```js
+  var parseRequestHeaders = {
+    'X-Parse-Application-Id': 'YOUR_PARSE_APPLICATION_ID',
+    'X-Parse-REST-API-Key': 'YOUR_PARSE_REST_API_KEY'
+  };
+  ```
+
+  You can find your Application Id and REST API Key in your app's dashboard under "App Settings" > "Security & Keys" (on the left sidebar).
+
+8. Next you're going to set up a `Photo` resource to interact with Parse. Make sure to add `ngResource` to your Angular app's list of dependencies.
+
+9. Define the `Photo` resource:
+
+  ```js
+  app.factory('Photo', ['$resource', function ($resource) {
+    return $resource('https://api.parse.com/1/classes/Photo/:photoId', { photoId: '@photoId' },
+      {
+        query: {
+          method: 'GET',
+          isArray: false,
+          headers: parseRequestHeaders
+        },
+        save: {
+          method: 'POST',
+          headers: parseRequestHeaders
+        }
+      });
+  }]);
+  ```
+
+  * Calling the `Photo.query` method will send a `GET` request to `https://api.parse.com/1/classes/Photo` (to get all the photos in the collection).
+  * Calling the `Photo.save` method will send a `POST` request to `https://api.parse.com/1/classes/Photo` (to add a new photo to the collection).
+
+10. In the `SearchCtrl`, implement your `savePhoto` function so that it calls the `Photo.save` method:
+
+  ```js
+  $scope.savePhoto = function (photo) {
+    var photoData = {
+      url: photo.images.standard_resolution.url,
+      user: photo.user.username,
+      likes: photo.likes.count
+    };
+
+    Photo.save(photoData, function (data) {
+      // success callback
+    }, function (error) {
+      // error callback
+    });
+
+    // or without callbacks:
+    // Photo.save(photoData);
+  };
+  ```
+
+11. Now when the user clicks the "favorite" link on any photo, the photo should save to your `Photo` collection in parse. Check your Parse dashboard to see if it's working!

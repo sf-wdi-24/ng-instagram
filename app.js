@@ -1,8 +1,9 @@
-var app = angular.module('instagramSearchApp', ['ngRoute']);
+var app = angular.module('instagramSearchApp', ['ngRoute', 'ngResource']);
 
-app.run(function() {
-  Parse.initialize('9KdsHrz9QEEdM5Gz5GAuuHtdrjExO11sOvwMRnp5', 'UiPpuXT7RbjuY2wWLJt6jqOblBgGhDZNIOZrkvmL');
-});
+var parseRequestHeaders = {
+  'X-Parse-Application-Id': '9KdsHrz9QEEdM5Gz5GAuuHtdrjExO11sOvwMRnp5',
+  'X-Parse-REST-API-Key': 'zf0y9sW2W9Z9f5w1V8X8igrahIKfBVPJIcVwN7ys'
+};
 
 app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
@@ -21,7 +22,29 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
   });
 }]);
 
-app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
+app.factory('Photo', ['$resource', function ($resource) {
+  return $resource('https://api.parse.com/1/classes/Photo/:photoId', { photoId: '@photoId' },
+    {
+      query: {
+        method: 'GET',
+        isArray: false,
+        headers: parseRequestHeaders
+      },
+      save: {
+        method: 'POST',
+        headers: parseRequestHeaders
+      }
+    });
+  
+    // $resource function exposes all five RESTful methods/routes
+    // { 'get'   : { method: 'GET'                },
+    //   'save'  : { method: 'POST'               },
+    //   'query' : { method: 'GET', isArray: true },
+    //   'remove': { method: 'DELETE'             },
+    //   'delete': { method: 'DELETE'             } };
+}]);
+
+app.controller('SearchCtrl', ['$scope', '$http', 'Photo', function ($scope, $http, Photo) {
   $scope.photos = [];
 
   $scope.searchTag = function () {
@@ -37,55 +60,30 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
 
   $scope.savePhoto = function (photo) {
     photo.favorited = true;
-
-    var Photo = Parse.Object.extend('Photo');
-    var newPhoto = new Photo({
+    
+    var photoData = {
       url: photo.images.standard_resolution.url,
       user: photo.user.username,
       likes: photo.likes.count
+    };
+
+    Photo.save(photoData, function (data) {
+      // success callback (optional)
+    }, function (error) {
+      // error callback (optional)
     });
-
-    // save without error-handling:
-    // newPhoto.save()
-
-    // save with error-handling:
-    newPhoto.save()
-      .then(function (data) {
-        // success callback
-      }, function (error) {
-      	// error callback
-      });
   };
 }]);
 
-app.controller('FavoritesCtrl', ['$scope', '$q', function ($scope, $q) {
-	var PhotoDfd = $q.defer();
-	var Photo = Parse.Object.extend('Photo');
-	var query = new Parse.Query(Photo);
-	$scope.favorites = [];
+app.controller('FavoritesCtrl', ['$scope', 'Photo', function ($scope, Photo) {
+  $scope.favorites = [];
 
-	query.find()
-		.then(function (data) {
-			// success callback
-			PhotoDfd.resolve(data);
-		}, function (error) {
-			// error callback
-			PhotoDfd.reject(data);
-		});
-
-	PhotoDfd.promise
-		.then(function (data) {
-			// success callback
-			var favoritePhotos = data;
-			$scope.favorites = favoritePhotos.map(function (photo) {
-				return {
-					url: photo.get('url'),
-					user: photo.get('user'),
-					likes: photo.get('likes')
-				};
-			});
-		})
-		.catch(function (error) {
-			// error callback
-		});
+  Photo.query().$promise
+    .then(function (data) {
+      // success callback
+      $scope.favorites = data.results;
+    })
+    .catch(function (error) {
+      // error callback
+    });
 }]);

@@ -26,8 +26,11 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
     
     $http.jsonp(url)
       .then(function (response) {
+        // success callback
         $scope.tag = '';
         $scope.photos = response.data.data;
+      }, function (error) {
+        // error callback
       });
   };
 

@@ -2,7 +2,7 @@
 
 **Objective:** Use Angular to create two versions of an Instagram search engine, one with a Parse back-end, and one with MEAN Stack.
 
-**You should be pair programming the entire time you work on this lab. That means you're using ONE computer at a time, and ONLY the "driver" is allowed to type.**
+**You should be pair programming the entire time you work on this lab. That means you're using ONE computer at a time, and ONLY the "driver" is allowed to type (you'll switch roles throughout the lab).**
 
 ## Set Up
 
@@ -62,7 +62,7 @@
 
 ## Instagram Search
 
-1. At this point, the "driver" should add, commit, and push their changes to GitHub. The "driver" should also add the "navigator" as a collaborator on their forked version of the repo. It's time to switch drivers! The new driver should clone their partners forked version of the repo into their `develop` folder. The new navigator must close their computer.
+1. At this point, the "driver" should add, commit, and push their changes to GitHub. The "driver" should also add the "navigator" as a collaborator on their forked version of the repo. It's time to switch drivers! The new driver should clone their partner's forked version of the repo into their `develop` folder. The new navigator must close their computer.
 
 2. Since you're going to be implementing an Instagram search engine, you need an API key from Instagram. Go to <a href="https://www.instagram.com/developer" target="_blank">instagram.com/developer</a> and log in with your Instagram account (or create an account if you don't already have one).
 
@@ -84,14 +84,19 @@ from the form, set up the following `$http` request to the Instagram API (rememb
    * app.js
    */
 
-  var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?client_id=YOUR_INSTAGRAM_CLIENT_ID&callback=JSON_CALLBACK';
+  app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
+    $scope.searchTag = function () {
+      var tag = $scope.tag;
+      var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?client_id=d8d0d6b44249490bbde6eee4d1968dac&callback=JSON_CALLBACK';
 
-  $http.jsonp(url)
-    .then(function (response) {
-      // success callback
-    }, function (error) {
-      // error callback
-    });
+      $http.jsonp(url)
+        .then(function (response) {
+          // success callback
+        }, function (error) {
+          // error callback
+        });
+    };
+  }]);
   ```
 
   Note that you have to use `JSONP` to call the Instagram API from the client-side to bypass rules about Cross-Origin Requests.
@@ -114,9 +119,9 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 
 3. In `app.js`, define a function `$scope.savePhoto` in the `SearchCtrl`. When `savePhoto` is called, simply `console.log` the photo.
 
-4. It would be nice if you could save the "favorited" photos somewhere, so the next step is to set up your app to use Parse! First, **checkout a new branch called `parse`**.
+4. It would be nice if you could save the "favorited" photos somewhere, so the next step is to set up your app to use Parse! **First, checkout a new branch called `parse`.**
 
-5. Add the Parse CDN to `index.html`. You'll also be using `ngResource` to interact with Parse, so add that CDN as well. Your JavaScript CDNs should be in this order:```
+5. Add the Parse CDN to `index.html`. You'll also be using `ngResource` to interact with Parse, so add that CDN as well. Your JavaScript CDNs should be in this order:
 
   ```html
   <!-- index.html -->
@@ -232,7 +237,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   }]);
   ```
 
-  In `favorites.html`, `ng-repeat` over `favorites` to display the favorite photos in the view.
+13. In `favorites.html`, `ng-repeat` over `favorites` to display the favorite photos in the view.
 
 ## Favorites with MEAN Stack
 
@@ -305,7 +310,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   ```
 
 7. In `server.js`, you'll need a "catch all" route to render `index.hbs` for every server request:
- 
+
   ```js
   /*
    * server.js
@@ -332,7 +337,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 
 10. Inside `photo.js`, set up your Mongoose model:
 
-  ```
+  ```js
   /*
    * photo.js
    */
@@ -434,7 +439,7 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   };
   ```
 
-16. Now when the user clicks the "favorite" link on any photo, the photo should save to your `photos` collection in your Mongo database. You can check your `mongo` CLI in the Terminal to see if it's working.
+16. Now when the user clicks the "favorite" link on any photo, the photo should save to the `photos` collection in your Mongo database. You can check your `mongo` CLI in the Terminal to see if it's working.
 
 17. Add `Photo` to `FavoritesCtrl`'s list of dependencies. To get the favorite photos to display, call the `Photo.query` method in the `FavoritesCtrl`:
 
@@ -467,7 +472,9 @@ from the form, set up the following `$http` request to the Instagram API (rememb
   }]);
   ```
 
-  In `favorites.html`, `ng-repeat` over `favorites` to display the favorite photos in the view.
+18. In `favorites.html`, `ng-repeat` over `favorites` to display the favorite photos in the view.
+
+![giphy](https://cloud.githubusercontent.com/assets/7833470/12503593/6d245dac-c08a-11e5-9850-8427cc639d32.gif)
 
 ## Solutions
 

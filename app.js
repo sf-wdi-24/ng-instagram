@@ -19,6 +19,19 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 
 app.controller('SearchCtrl', ['$scope', '$http', function($scope, $http) {
 	$scope.searchCtrlTest = "Hey it's working!";
+  $scope.searchTag = function() {
+    var tag = $scope.tag;
+    var url = 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?client_id=d8d0d6b44249490bbde6eee4d1968dac&callback=JSON_CALLBACK';
+
+    $http.jsonp(url)
+      .then(function (response) {
+        $scope.searchTag = {};
+        $scope.photos = response.data.data;
+        console.log($scope.photos);
+      }, function (error) {
+
+      });
+  };
 }]);
 
 app.controller('FavoritesCtrl', ['$scope', function($scope){

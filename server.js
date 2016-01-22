@@ -37,6 +37,21 @@ app.get('/api/photos', function (req, res) {
   });
 });
 
+// create new photo
+app.post('/api/photos', function (req, res) {
+  // create new photo with form data (`req.body`)
+  var newPhoto = new Photo(req.body);
+
+  // save new photo in db
+  newPhoto.save(function (err, savedPhoto) {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.json(savedPhoto);
+    }
+  });
+});
+
 
 /*
  * Load `views/index.hbs` file

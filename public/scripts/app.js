@@ -32,10 +32,28 @@ app.controller('SearchCtrl', ['$scope', '$http', function ($scope, $http) {
   };
 
   $scope.savePhoto = function (photo) {
-    console.log(photo);
+    var photoData = {
+      url: photo.images.standard_resolution.url,
+      user: photo.user.username,
+      likes: photo.likes.count
+    };
+    $http.post('/api/photos', photoData)
+      .then(function (response) {
+        // success callback
+      }, function (error) {
+        // error callback
+      });
   };
 }]);
 
-app.controller('FavoritesCtrl', ['$scope', function ($scope) {
-  $scope.favoritesCtrlTest = 'FavoritesCtrl is working!';
+app.controller('FavoritesCtrl', ['$scope', '$http', function ($scope, $http) {
+  $scope.favorites = [];
+
+  $http.get('/api/photos')
+    .then(function (response) {
+      // success callback
+      $scope.favorites = response.data;
+    }, function (error) {
+      // error callback
+    });
 }]);

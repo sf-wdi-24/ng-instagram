@@ -47,7 +47,7 @@
    * app.js
    */
 
-   app.controller('SearchCtrl', ['$scope', '$http', function ($scope) {
+   app.controller('SearchCtrl', ['$scope', function ($scope) {
      // add a test attribute to `$scope` here
    }]);
 
@@ -124,16 +124,13 @@ from the form, set up the following `$http` request to the Instagram API (rememb
 
 4. It would be nice if you could save the "favorited" photos somewhere, so the next step is to set up your app to use Parse! **First, checkout a new branch called `parse`.**
 
-5. Add the Parse CDN to `index.html`. You'll also be using `ngResource` to interact with Parse, so add that CDN as well. Your JavaScript CDNs should be in this order:
+5. You'll be using `ngResource` to interact with Parse, so add the CDN to `index.html`. Your JavaScript CDNs should be in this order:
 
   ```html
   <!-- index.html -->
 
   <head>
     ...
-
-    <!-- parse -->
-    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
 
     <!-- angular -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.min.js"></script>
